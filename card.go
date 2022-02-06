@@ -18,7 +18,7 @@ func new_card(value string, suit string, intValue int) Card {
 }
 
 func getCardInfo(card Card) string {
-	return card.suit + card.value + string(card.intValue)
+	return card.suit + card.value
 }
 
 func generateDeck() []Card {
@@ -58,7 +58,13 @@ func drawOne(deck *[]Card) Card {
 	return card
 }
 
-func startGame(amountOfPlayers int, gameMode string) [][]Card {
+type Table struct {
+	playersCards [][]Card
+	gameMode     string
+	deck         []Card
+}
+
+func startGame(amountOfPlayers int, gameMode string) Table {
 	deck := generateDeck()
 	shuffleDeck(deck)
 	var playersCards [][]Card
@@ -72,7 +78,9 @@ func startGame(amountOfPlayers int, gameMode string) [][]Card {
 		}
 		playersCards = append(playersCards, hands)
 	}
-	return playersCards
+
+	table := Table{playersCards: playersCards, gameMode: gameMode, deck: deck}
+	return table
 }
 
 // default is poker
@@ -83,8 +91,18 @@ func initialCards(gameMode string) int {
 	return 5
 }
 
+func getTableInfo(table Table) {
+	fmt.Println("Amount of players: ", len(table.playersCards), "...Game mode : ", table.gameMode, ". At this table: ")
+	for i, player := range table.playersCards {
+		fmt.Println(i, " player's cards : ")
+		for _, card := range player {
+			fmt.Println(getCardInfo(card))
+		}
+	}
+}
+
 func main() {
 	fmt.Println("Playing cards")
-	playersCards := startGame(4, "poker")
-	fmt.Println(playersCards)
+	table := startGame(4, "poker")
+	getTableInfo(table)
 }
