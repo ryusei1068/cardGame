@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"strconv"
 	"time"
 )
 
@@ -132,8 +133,7 @@ func winnerOf21(table Table) string {
 		return "It is a draw"
 	} else if cache[points[winnerIndex]] >= 0 {
 		winner := winnerIndex + 1
-		result := "player " + string(winner) + " is the winner"
-		return result
+		return "player " + strconv.Itoa(winner) + " is the winner"
 	}
 	return "No winners..."
 }
