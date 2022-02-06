@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"time"
 )
 
 type Card struct {
@@ -41,7 +42,8 @@ func printDeck(deck []Card) {
 	}
 }
 
-func shffleDeck(deck []Card) {
+func shuffleDeck(deck []Card) {
+	rand.Seed(time.Now().UnixNano())
 	deckSize := len(deck)
 	for i := 0; i < deckSize; i++ {
 		randNum := rand.Intn((deckSize - i) + i)
@@ -49,10 +51,18 @@ func shffleDeck(deck []Card) {
 	}
 }
 
+func drawOne(deck *[]Card) Card {
+	size := len(*deck)
+	card := (*deck)[size-1]
+	*deck = (*deck)[:size-1]
+	return card
+}
+
 func main() {
 	fmt.Println("Playing cards")
 	deck := generateDeck()
+	shuffleDeck(deck)
 	fmt.Println(deck)
-	shffleDeck(deck)
+	fmt.Println("Drawed card : ", drawOne(&deck))
 	fmt.Println(deck)
 }
