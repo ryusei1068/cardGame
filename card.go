@@ -58,14 +58,16 @@ func drawOne(deck *[]Card) Card {
 	return card
 }
 
-func startGame(amountOfPlayers int) [][]Card {
+func startGame(amountOfPlayers int, gameMode string) [][]Card {
 	deck := generateDeck()
 	shuffleDeck(deck)
 	var playersCards [][]Card
 
+	numberDistribution := initialCards(gameMode)
+
 	for player := 1; player <= amountOfPlayers; player++ {
 		var hands []Card
-		for i := 1; i <= 2; i++ {
+		for i := 1; i <= numberDistribution; i++ {
 			hands = append(hands, drawOne(&deck))
 		}
 		playersCards = append(playersCards, hands)
@@ -73,8 +75,16 @@ func startGame(amountOfPlayers int) [][]Card {
 	return playersCards
 }
 
+// default is poker
+func initialCards(gameMode string) int {
+	if gameMode == "21" {
+		return 2
+	}
+	return 5
+}
+
 func main() {
 	fmt.Println("Playing cards")
-	playersCards := startGame(4)
+	playersCards := startGame(4, "poker")
 	fmt.Println(playersCards)
 }
