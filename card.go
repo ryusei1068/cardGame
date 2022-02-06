@@ -94,15 +94,67 @@ func initialCards(gameMode string) int {
 func getTableInfo(table Table) {
 	fmt.Println("Amount of players: ", len(table.playersCards), "...Game mode : ", table.gameMode, ". At this table: ")
 	for i, player := range table.playersCards {
-		fmt.Println(i, " player's cards : ")
+		fmt.Println(i+1, "player's cards : ")
 		for _, card := range player {
 			fmt.Println(getCardInfo(card))
 		}
 	}
 }
 
+func score21Individual(cards []Card) int {
+	var score int
+	for _, card := range cards {
+		score += card.intValue
+	}
+	if score <= 21 {
+		return score
+	}
+	return 0
+}
+
+func winnerOf21(table Table) string {
+	var points []int
+	cache := make(map[int]int)
+
+	for _, cards := range table.playersCards {
+		point := score21Individual(cards)
+		points = append(points, point)
+		_, exist := cache[point]
+		if exist {
+			cache[point] += 1
+		} else {
+			cache[point] = 1
+		}
+	}
+	fmt.Println(points)
+	winnerIndex := maxInArrayIndex(points)
+	if cache[points[winnerIndex]] > 1 {
+		return "It is a draw"
+	} else if cache[points[winnerIndex]] >= 0 {
+		winner := winnerIndex + 1
+		result := "player " + string(winner) + " is the winner"
+		return result
+	}
+	return "No winners..."
+}
+
+func maxInArrayIndex(arr []int) int {
+	maxIndex := 0
+	maxValue := arr[0]
+
+	for i, num := range arr {
+		if num > maxValue {
+			maxValue = num
+			maxIndex = i
+		}
+	}
+
+	return maxIndex
+}
+
 func main() {
 	fmt.Println("Playing cards")
-	table := startGame(4, "poker")
+	table := startGame(4, "21")
 	getTableInfo(table)
+	fmt.Println(winnerOf21(table))
 }
