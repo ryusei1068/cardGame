@@ -8,10 +8,10 @@ import (
 
 type Card struct {
 	value, suit string
-	intValue    int32
+	intValue    int
 }
 
-func new_card(value string, suit string, intValue int32) Card {
+func new_card(value string, suit string, intValue int) Card {
 	var card Card
 	card = Card{value: value, suit: suit, intValue: intValue}
 	return card
@@ -29,7 +29,7 @@ func generateDeck() []Card {
 	for _, suit := range suits {
 		for i, value := range values {
 			intValue := i + 1
-			deck = append(deck, new_card(value, suit, int32(intValue)))
+			deck = append(deck, new_card(value, suit, intValue))
 		}
 	}
 	return deck
@@ -58,11 +58,23 @@ func drawOne(deck *[]Card) Card {
 	return card
 }
 
-func main() {
-	fmt.Println("Playing cards")
+func startGame(amountOfPlayers int) [][]Card {
 	deck := generateDeck()
 	shuffleDeck(deck)
-	fmt.Println(deck)
-	fmt.Println("Drawed card : ", drawOne(&deck))
-	fmt.Println(deck)
+	var playersCards [][]Card
+
+	for player := 1; player <= amountOfPlayers; player++ {
+		var hands []Card
+		for i := 1; i <= 2; i++ {
+			hands = append(hands, drawOne(&deck))
+		}
+		playersCards = append(playersCards, hands)
+	}
+	return playersCards
+}
+
+func main() {
+	fmt.Println("Playing cards")
+	playersCards := startGame(4)
+	fmt.Println(playersCards)
 }
