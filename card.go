@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 )
 
 type Card struct {
@@ -15,7 +16,7 @@ func new_card(value string, suit string, intValue int32) Card {
 	return card
 }
 
-func getCard(card Card) string {
+func getCardInfo(card Card) string {
 	return card.suit + card.value + string(card.intValue)
 }
 
@@ -33,8 +34,25 @@ func generateDeck() []Card {
 	return deck
 }
 
+func printDeck(deck []Card) {
+	fmt.Println("Displaying cards...")
+	for _, card := range deck {
+		fmt.Println(getCardInfo(card))
+	}
+}
+
+func shffleDeck(deck []Card) {
+	deckSize := len(deck)
+	for i := 0; i < deckSize; i++ {
+		randNum := rand.Intn((deckSize - i) + i)
+		deck[i], deck[randNum] = deck[randNum], deck[i]
+	}
+}
+
 func main() {
 	fmt.Println("Playing cards")
 	deck := generateDeck()
+	fmt.Println(deck)
+	shffleDeck(deck)
 	fmt.Println(deck)
 }
